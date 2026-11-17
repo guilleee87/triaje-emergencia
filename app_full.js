@@ -2723,7 +2723,7 @@ function imprimirAlertaNN() {
         <tr><td class="lbl">Historia Clínica Temporal:</td><td><strong style="color:#0284c7; font-size:1rem;">${STATE.historiaClinica || "HC-TEMP-EMG-001"}</strong></td></tr>
         <tr><td class="lbl">Ticket de Urgencia:</td><td><strong>${STATE.turno || 'T-NN-01'}</strong></td></tr>
         <tr><td class="lbl">Condición de Identidad:</td><td><strong style="color:#b91c1c;">NO IDENTIFICADO (NN)</strong></td></tr>
-        <tr><td class="lbl">Modalidad de Ingreso:</td><td>${STATE.modalidadIngreso || 'Ambulancia SAMU / Patrullero PNP / Transeúntes'}</td></tr>
+        <tr><td class="lbl">Modalidad de Ingreso:</td><td>${STATE.modalidadIngreso || 'Ambulancia / Patrullero PNP / Transeúntes'}</td></tr>
         <tr><td class="lbl">Prioridad Clínica Evaluada:</td><td>${STATE.prioridad ? `Prioridad ${STATE.prioridad} (${PRIORIDADES[STATE.prioridad].nombre})` : 'En evaluación clínica de triaje'}</td></tr>
         <tr><td class="lbl">Cama / Área Asignada:</td><td>${STATE.camaAsignada || 'Tópico de Emergencia / Shock Trauma'}</td></tr>
         <tr><td class="lbl">Servicio Social:</td><td>Notificación formal emitida simultáneamente</td></tr>
@@ -4066,25 +4066,63 @@ function actualizarFactura() {
 }
 
 function actualizarMedidorSoat(liq) {
+  if (!liq) liq = calcularLiquidacionSeguro();
   const container = document.getElementById("soatMeterContainer");
   const badgeNav = document.getElementById("navSoatBadge");
   const saldoNav = document.getElementById("navSoatSaldo");
+  const miniBadge = document.getElementById("mini_soat_badge");
+  const cardMod3 = document.getElementById("soat_meter_card");
+  const saldoMod3 = document.getElementById("soat_saldo_display");
+  const fillMod3 = document.getElementById("soat_progress_fill");
+  const factMod3 = document.getElementById("soat_facturado_lbl");
 
   if (!STATE.esAccidenteTransito) {
     if (container) container.style.display = "none";
     if (badgeNav) badgeNav.style.display = "none";
+    if (miniBadge) miniBadge.style.display = "none";
+    if (cardMod3) cardMod3.style.display = "none";
     return;
   }
 
-  // Si es Accidente de Tránsito:
+  // Si es Accidente de Tránsito SIN PLACA / EN FUGA:
+  if (STATE.soatVehiculoFuga) {
+    if (container) container.style.display = "none";
+    if (badgeNav) badgeNav.style.display = "none";
+    if (cardMod3) cardMod3.style.display = "none";
+    if (miniBadge) {
+      miniBadge.style.display = "inline-flex";
+      miniBadge.style.background = "#fee2e2";
+      miniBadge.style.color = "#991b1b";
+      miniBadge.style.borderColor = "#fca5a5";
+      miniBadge.textContent = "🚨 SOAT: Sin Placa (Sin Seguro / Cargo Completo)";
+    }
+    return;
+  }
+
+  // Si es Accidente con PLACA IDENTIFICADA:
   if (badgeNav) badgeNav.style.display = "inline-flex";
   if (container) container.style.display = "block";
+  if (cardMod3) cardMod3.style.display = "block";
 
   const consumido = liq.coberturaSoatAplicada || 0;
-  const saldo = liq.saldoSoatRestante !== undefined ? liq.saldoSoatRestante : (27500 - consumido);
+  const saldo = liq.saldoSoatRestante !== undefined ? liq.saldoSoatRestante : Math.max(0, 27500 - consumido);
   const pct = Math.min(100, (consumido / 27500) * 100);
 
   if (saldoNav) saldoNav.textContent = `S/. ${saldo.toFixed(2)}`;
+  if (miniBadge) {
+    miniBadge.style.display = "inline-flex";
+    miniBadge.style.background = "#fff7ed";
+    miniBadge.style.color = "#c2410c";
+    miniBadge.style.borderColor = "#fb923c";
+    miniBadge.textContent = `🚗 SOAT Saldo: S/. ${saldo.toFixed(2)}`;
+  }
+
+  if (saldoMod3) saldoMod3.textContent = `Saldo Disponible: S/. ${saldo.toFixed(2)}`;
+  if (fillMod3) {
+    fillMod3.style.width = `${pct}%`;
+    fillMod3.style.background = pct > 85 ? "#dc2626" : (pct > 50 ? "#ea580c" : "#16a34a");
+  }
+  if (factMod3) factMod3.textContent = `S/. ${consumido.toFixed(2)}`;
 
   const consEl = document.getElementById("soatMeterConsumido");
   const salEl = document.getElementById("soatMeterSaldo");
@@ -4946,6 +4984,8 @@ function cambiarOrigenEvento(tipo) {
   const btnTransito = document.getElementById("btn_origen_transito");
   const bannerTransito = document.getElementById("banner_origen_transito");
   const navSoatBadge = document.getElementById("navSoatBadge");
+  const soatWrapper = document.getElementById("seccion_soat_wrapper");
+  const pideWrapper = document.getElementById("seccion_pide_wrapper");
 
   if (tipo === "transito") {
     if (btnTransito) { btnTransito.classList.add("active"); btnTransito.style.background = "#dc2626"; btnTransito.style.color = "#ffffff"; }
@@ -4953,16 +4993,26 @@ function cambiarOrigenEvento(tipo) {
     if (bannerTransito) bannerTransito.style.display = "block";
     if (navSoatBadge) navSoatBadge.style.display = "inline-flex";
 
-    // Activación obligatoria de pestaña SOAT en Módulo 3 y candado SINADEF en Módulo 7
-    STATE.tipoSeguro = "SOAT";
+    // Mostrar sección SOAT y ocultar PIDE común
+    if (soatWrapper) soatWrapper.style.display = "block";
+    if (pideWrapper) pideWrapper.style.display = "none";
+
+    // Activar candado SINADEF
     STATE.bloqueoSinadef = true;
-    cambiarOpcionSoat("placa");
+    cambiarOpcionSoat("identificado");
   } else {
     if (btnComun) { btnComun.classList.add("active"); btnComun.style.background = "#0284c7"; btnComun.style.color = "#ffffff"; }
     if (btnTransito) { btnTransito.classList.remove("active"); btnTransito.style.background = "#f1f5f9"; btnTransito.style.color = "#334155"; }
     if (bannerTransito) bannerTransito.style.display = "none";
     if (navSoatBadge) navSoatBadge.style.display = "none";
+
+    // Ocultar sección SOAT y mostrar PIDE común
+    if (soatWrapper) soatWrapper.style.display = "none";
+    if (pideWrapper) pideWrapper.style.display = "block";
+
     STATE.bloqueoSinadef = false;
+    STATE.soatVehiculoFuga = false;
+    STATE.tipoSeguro = "Particular";
   }
 
   actualizarFactura();
@@ -5046,7 +5096,7 @@ function togglePediatrico(chk) {
 
 // --- MÓDULO 3: SOAT Y ACREDITACIÓN PIDE ---
 function consultarSoatApeseg() {
-  const placaEl = document.getElementById("soat_placa_input");
+  const placaEl = document.getElementById("soat_placa") || document.getElementById("soat_placa_input");
   const placa = (placaEl?.value || "").trim().toUpperCase();
 
   if (!placa || placa.length < 5) {
@@ -5056,53 +5106,58 @@ function consultarSoatApeseg() {
 
   STATE.soatPlaca = placa;
   STATE.soatVehiculoFuga = false;
+  STATE.tipoSeguro = "SOAT";
   STATE.soatAseguradora = "Pacífico Compañía de Seguros y Reaseguros";
   STATE.soatPoliza = `SOAT-2026-${Math.floor(100000 + Math.random() * 900000)}`;
   STATE.soatEstado = "ACTIVO / VIGENTE (APESEG)";
 
-  const infoBox = document.getElementById("soat_info_box");
-  if (infoBox) {
-    infoBox.style.display = "block";
-    infoBox.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        <span style="font-size:24px;">✅</span>
-        <div>
-          <strong style="color:#15803d;font-size:14px;">PÓLIZA SOAT VERIFICADA EN LÍNEA (APESEG / MTC)</strong>
-          <div style="font-size:12px;color:#334155;">Placa Vehicular: <strong>${placa}</strong> | Aseguradora: <strong>${STATE.soatAseguradora}</strong></div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;background:#f8fafc;padding:8px;border-radius:6px;">
-        <div><strong>Póliza N°:</strong> ${STATE.soatPoliza}</div>
-        <div><strong>Estado:</strong> <span style="color:#15803d;font-weight:700;">${STATE.soatEstado}</span></div>
-        <div><strong>Tope Legal Gastos Médicos:</strong> 5 UIT (S/. 27,500.00)</div>
-        <div><strong>Uso de Vehículo:</strong> Particular / Interurbano</div>
-      </div>
-    `;
-  }
+  const polizaInput = document.getElementById("soat_poliza");
+  if (polizaInput) polizaInput.value = STATE.soatPoliza;
 
-  alert(`✅ SOAT verificado exitosamente para la placa ${placa}. Cobertura legal activada hasta 5 UIT (S/. 27,500.00).`);
+  const aseguSelect = document.getElementById("soat_aseguradora");
+  if (aseguSelect) aseguSelect.value = "Pacífico Seguros";
+
+  const estadoSelect = document.getElementById("soat_estado");
+  if (estadoSelect) estadoSelect.value = "ACTIVO";
+
+  alert(`✅ SOAT verificado exitosamente ante APESEG para la placa ${placa}. Cobertura legal activada hasta 5 UIT (S/. 27,500.00).`);
   actualizarFactura();
 }
 
 function cambiarOpcionSoat(opcion) {
   STATE.soatOpcion = opcion;
-  const tabPlaca = document.getElementById("tab_soat_placa");
-  const tabFuga = document.getElementById("tab_soat_fuga");
-  const secPlaca = document.getElementById("sec_soat_con_placa");
-  const secFuga = document.getElementById("sec_soat_fuga");
+  const esFuga = (opcion === "fuga" || opcion === "sin_placa");
+  STATE.soatVehiculoFuga = esFuga;
 
-  if (opcion === "fuga") {
-    STATE.soatVehiculoFuga = true;
-    if (tabFuga) tabFuga.classList.add("active");
-    if (tabPlaca) tabPlaca.classList.remove("active");
-    if (secFuga) secFuga.style.display = "block";
-    if (secPlaca) secPlaca.style.display = "none";
+  const rbIdent = document.getElementById("rb_soat_identificado");
+  const rbFuga = document.getElementById("rb_soat_fuga");
+  const boxCampos = document.getElementById("box_soat_campos");
+  const meterCard = document.getElementById("soat_meter_card");
+  const boxFugaAlert = document.getElementById("box_soat_fuga_alert");
+  const navSoatBadge = document.getElementById("navSoatBadge");
+  const miniSoatBadge = document.getElementById("mini_soat_badge");
+
+  if (esFuga) {
+    if (rbFuga) rbFuga.checked = true;
+    if (rbIdent) rbIdent.checked = false;
+    if (boxCampos) boxCampos.style.display = "none";
+    if (meterCard) meterCard.style.display = "none";
+    if (boxFugaAlert) boxFugaAlert.style.display = "block";
+    if (navSoatBadge) navSoatBadge.style.display = "none";
+    if (miniSoatBadge) miniSoatBadge.style.display = "none";
+
+    STATE.soatPlaca = "NO IDENTIFICADO (SIN PLACA)";
+    STATE.tipoSeguro = "Particular (Accidente de Tránsito sin Placa / En Fuga)";
   } else {
-    STATE.soatVehiculoFuga = false;
-    if (tabPlaca) tabPlaca.classList.add("active");
-    if (tabFuga) tabFuga.classList.remove("active");
-    if (secPlaca) secPlaca.style.display = "block";
-    if (secFuga) secFuga.style.display = "none";
+    if (rbIdent) rbIdent.checked = true;
+    if (rbFuga) rbFuga.checked = false;
+    if (boxCampos) boxCampos.style.display = "grid";
+    if (meterCard) meterCard.style.display = "block";
+    if (boxFugaAlert) boxFugaAlert.style.display = "none";
+    if (navSoatBadge) navSoatBadge.style.display = "inline-flex";
+    if (miniSoatBadge) miniSoatBadge.style.display = "inline-flex";
+
+    STATE.tipoSeguro = "SOAT";
   }
 
   actualizarFactura();
@@ -5423,7 +5478,7 @@ function imprimirFormatoRefcon() {
       </table>
       <div style="margin-top:40px;display:flex;justify-content:space-between;text-align:center;">
         <div style="border-top:1px solid #000;width:200px;padding-top:4px;">Médico que Refiere</div>
-        <div style="border-top:1px solid #000;width:200px;padding-top:4px;">Médico SAMU / Traslado</div>
+        <div style="border-top:1px solid #000;width:200px;padding-top:4px;">Médico de Ambulancia / Traslado</div>
       </div>
     </body></html>
   `);

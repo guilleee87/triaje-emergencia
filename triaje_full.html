@@ -620,28 +620,28 @@
   <nav class="top-steps-navbar" id="topStepsNavbar">
     <div class="top-steps-scroll">
       <a href="#sec_mod1" class="top-step-btn active" id="btnStepTop_1" onclick="irAModulo(1)">
-        <span class="step-circle">1</span> 1. Triaje (I-V)
+        <span class="step-circle">1</span> 1. Triaje Fisiológico
       </a>
       <a href="#sec_mod2" class="top-step-btn" id="btnStepTop_2" onclick="irAModulo(2)">
-        <span class="step-circle">2</span> 2. Admisión (RENIEC/NN)
+        <span class="step-circle">2</span> 2. Admisión &amp; RENIEC
       </a>
       <a href="#sec_mod3" class="top-step-btn" id="btnStepTop_3" onclick="irAModulo(3)">
-        <span class="step-circle">3</span> 3. Cobertura (SOAT/PIDE)
+        <span class="step-circle">3</span> 3. Acreditación PIDE-SUSALUD &amp; SOAT
       </a>
       <a href="#sec_mod4" class="top-step-btn" id="btnStepTop_4" onclick="irAModulo(4)">
-        <span class="step-circle">4</span> 4. Tópico &amp; Kardex
+        <span class="step-circle">4</span> 4. Shock Trauma &amp; Kardex
       </a>
       <a href="#sec_mod5" class="top-step-btn" id="btnStepTop_5" onclick="irAModulo(5)">
-        <span class="step-circle">5</span> 5. Observación (12-24h)
+        <span class="step-circle">5</span> 5. Sala de Observación
       </a>
       <a href="#sec_mod6" class="top-step-btn" id="btnStepTop_6" onclick="irAModulo(6)">
-        <span class="step-circle">6</span> 6. Camas &amp; SOP
+        <span class="step-circle">6</span> 6. Camas Críticas &amp; SOP
       </a>
       <a href="#sec_mod7" class="top-step-btn" id="btnStepTop_7" onclick="irAModulo(7)">
-        <span class="step-circle">7</span> 7. Egreso &amp; Legal
+        <span class="step-circle">7</span> 7. Egreso &amp; Auditoría Legal
       </a>
       <a href="#sec_mod8" class="top-step-btn" id="btnStepTop_8" onclick="irAModulo(8)">
-        <span class="step-circle">8</span> 8. Factura &amp; Auditoría
+        <span class="step-circle">8</span> 8. Facturación Acumulativa
       </a>
 
       <div class="navbar-mini-stats">
@@ -668,7 +668,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">1</span>
           <div>
-            <div>Módulo 1 — Enfermería de Triaje: Triaje Fisiológico, Origen del Evento &amp; Categorización I–V</div>
+            <div>Módulo 1: Triaje Fisiológico, Origen del Evento &amp; Categorización I–V</div>
             <div class="module-section-subtitle">Puerta de entrada universal · NTS N° 042-MINSA/DGSP-V.01 · Ley N° 27604</div>
           </div>
         </div>
@@ -904,7 +904,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">2</span>
           <div>
-            <div>Módulo 2 — Admisión de Emergencia: Identificación RENIEC, Supabase &amp; Protocolo NN</div>
+            <div>Módulo 2: Admisión, Identificación RENIEC, Supabase &amp; Protocolo NN</div>
             <div class="module-section-subtitle">Paralelo para Prioridad I/II · Secuencial para III/IV/V · Ley N° 27604 · NTS N° 139-MINSA</div>
           </div>
         </div>
@@ -922,7 +922,7 @@
           <label>Modalidad de Ingreso al Establecimiento:</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button type="button" class="btn-full-secondary modalidad-btn selected" data-mod="A pie" onclick="selectModalidad(this)">🚶 A pie / Ambulatorio</button>
-            <button type="button" class="btn-full-secondary modalidad-btn" data-mod="Ambulancia SAMU" onclick="selectModalidad(this)">🚑 Ambulancia SAMU</button>
+            <button type="button" class="btn-full-secondary modalidad-btn" data-mod="Ambulancia" onclick="selectModalidad(this)">🚑 Ambulancia</button>
             <button type="button" class="btn-full-secondary modalidad-btn" data-mod="Policía / Serenazgo" onclick="selectModalidad(this)">🚓 Policía Nacional / Serenazgo</button>
             <button type="button" class="btn-full-secondary modalidad-btn" data-mod="Particular" onclick="selectModalidad(this)">🚗 Vehículo Particular</button>
           </div>
@@ -1025,7 +1025,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">3</span>
           <div>
-            <div>Módulo 3 — Admisión / Cuentas Corrientes: Acreditación PIDE-SUSALUD &amp; Motor SOAT</div>
+            <div>Módulo 3: Acreditación PIDE-SUSALUD, Pestaña SOAT &amp; Cobertura</div>
             <div class="module-section-subtitle">D.S. N° 024-2002-MTC (SOAT) · Ley N° 29344 (AUS) · Ley N° 27604</div>
           </div>
         </div>
@@ -1041,18 +1041,25 @@
           </div>
 
           <!-- SELECTOR DE IDENTIFICACIÓN VEHICULAR -->
-          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:14px; margin-bottom:14px;">
-            <div style="font-size:0.82rem; font-weight:800; color:#0f172a; margin-bottom:10px;">
-              Identificación del Vehículo Involucrado en el Siniestro:
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:16px; margin-bottom:14px;">
+            <div style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span>🚗</span>
+              <span>Identificación del Vehículo Involucrado en el Siniestro Vial:</span>
             </div>
-            <div style="display:flex; gap:16px; flex-wrap:wrap;">
-              <label style="display:flex; align-items:center; gap:6px; font-weight:700; cursor:pointer;">
-                <input type="radio" name="soat_opcion" id="rb_soat_identificado" value="identificado" checked onchange="cambiarOpcionSoat('identificado')">
-                <span>Opción 1: Vehículo Identificado (Validar SOAT por Placa)</span>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+              <label style="display:flex; align-items:flex-start; gap:10px; background:#f0fdf4; border:2px solid #86efac; border-radius:8px; padding:12px; cursor:pointer;">
+                <input type="radio" name="soat_opcion" id="rb_soat_identificado" value="identificado" checked onchange="cambiarOpcionSoat('identificado')" style="margin-top:3px;">
+                <div>
+                  <strong style="color:#166534; font-size:0.85rem; display:block;">Opción 1: Vehículo con Placa Identificada</strong>
+                  <span style="font-size:0.75rem; color:#15803d;">Permite consultar la póliza en APESEG y activar cobertura legal de hasta 5 UIT (S/. 27,500.00).</span>
+                </div>
               </label>
-              <label style="display:flex; align-items:center; gap:6px; font-weight:700; color:#dc2626; cursor:pointer;">
-                <input type="radio" name="soat_opcion" id="rb_soat_fuga" value="fuga" onchange="cambiarOpcionSoat('fuga')">
-                <span>Opción 2: 🚨 Vehículo NO Identificado (Chofer en fuga / Sin Placa)</span>
+              <label style="display:flex; align-items:flex-start; gap:10px; background:#fef2f2; border:2px solid #fca5a5; border-radius:8px; padding:12px; cursor:pointer;">
+                <input type="radio" name="soat_opcion" id="rb_soat_fuga" value="fuga" onchange="cambiarOpcionSoat('fuga')" style="margin-top:3px;">
+                <div>
+                  <strong style="color:#991b1b; font-size:0.85rem; display:block;">Opción 2: 🚨 Sin Identificación de Placa (Fuga / No identificado)</strong>
+                  <span style="font-size:0.75rem; color:#b91c1c;">No se activa ningún seguro. Se liquida con CARGO COMPLETO al 100% a cargo del paciente.</span>
+                </div>
               </label>
             </div>
           </div>
@@ -1110,9 +1117,22 @@
           </div>
 
           <!-- ALERTA DE VEHÍCULO EN FUGA (OPCIÓN 2) -->
-          <div id="box_soat_fuga_alert" class="alerta-soat-fuga" style="display:none;">
-            ⚠️ <strong>ACCIDENTE DE TRÁNSITO SIN VEHÍCULO IDENTIFICADO (FUGA):</strong><br>
-            Atención médica garantizada por la <strong>Ley N° 27604</strong>, pero <strong>SIN COBERTURA SOAT</strong>. Conforme a ley, el 100% de los gastos médicos, quirúrgicos, estancia y farmacia se liquidan a cargo del paciente (Pagante Total / Particular).
+          <div id="box_soat_fuga_alert" class="alerta-soat-fuga" style="display:none; background:#fff1f2; border:2px solid #f43f5e; border-radius:10px; padding:16px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+              <span style="font-size:24px;">🚨</span>
+              <div>
+                <strong style="color:#9f1239; font-size:0.95rem;">ACCIDENTE DE TRÁNSITO SIN PLACA IDENTIFICADA (VEHÍCULO EN FUGA)</strong>
+                <div style="font-size:0.78rem; color:#881337;">Amparo Legal: Art. 31° D.S. N° 024-2002-MTC y Ley N° 27604 (Emergencias y Partos)</div>
+              </div>
+            </div>
+            <p style="font-size:0.82rem; color:#4c0519; margin:6px 0 12px; line-height:1.5;">
+              Al haberse declarado que <strong>no se tiene identificación de placa vehicular</strong>, el sistema <strong>NO ACTIVA NINGÚN SEGURO SOAT</strong> por falta de póliza identificada. La atención médica de estabilización continúa garantizada por ley, pero en el Módulo 8 se generará el <strong>CARGO COMPLETO (100% FACTURADO AL PACIENTE)</strong> como particular, emitiéndose la liquidación y atestado para su posterior gestión ante el Fondo de Compensación del SOAT (FONSAT/MTC).
+            </p>
+            <div style="display:flex; justify-content:flex-end;">
+              <button type="button" class="btn-full-primary" style="background:#e11d48; border-color:#be123c;" onclick="irAModulo(4)">
+                Continuar al Módulo 4: Shock Trauma &amp; Tópicos ➔
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1169,7 +1189,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">4</span>
           <div>
-            <div>Módulo 4 — Médico Emergenciólogo y Enfermería de Tópico: Tópicos, Kardex &amp; Destino</div>
+            <div>Módulo 4: Shock Trauma, Tópicos de Emergencia &amp; Kardex</div>
             <div class="module-section-subtitle">NTS N° 042-MINSA · NTS N° 139-MINSA · Kardex de Enfermería con confirmación de administración</div>
           </div>
         </div>
@@ -1302,7 +1322,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">5</span>
           <div>
-            <div>Módulo 5 — Sala de Observación de Emergencia &amp; Reevaluación Médica</div>
+            <div>Módulo 5: Sala de Observación &amp; Reevaluación Médica</div>
             <div class="module-section-subtitle">Estancia reglamentaria de 12 a 24 horas · Balance hídrico · NTS N° 042-MINSA/DGSP-V.01</div>
           </div>
         </div>
@@ -1379,7 +1399,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">6</span>
           <div>
-            <div>Módulo 6 — Gestión de Camas y Áreas Críticas: SOP, UCI &amp; Hospitalización</div>
+            <div>Módulo 6: Stock, Asignación de Camas Críticas, SOP &amp; Hospitalización</div>
             <div class="module-section-subtitle">Stock en tiempo real · Priorización UCI NTS N° 031-MINSA · Algoritmo de Prelación ABCDE</div>
           </div>
         </div>
@@ -1466,7 +1486,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">7</span>
           <div>
-            <div>Módulo 7 — Egreso Clínico, REFCON, Alta Voluntaria o Defunción Legal</div>
+            <div>Módulo 7: Egreso Clínico, REFCON, Alta Voluntaria o Defunción Legal</div>
             <div class="module-section-subtitle">Cierre asistencial · Ley N° 26842 (Art. 4°) · Candado Médico-Legal Art. 195° CPP (SINADEF vs Fiscalía)</div>
           </div>
         </div>
@@ -1627,7 +1647,7 @@
         <div class="module-section-title">
           <span class="module-num-badge">8</span>
           <div>
-            <div>Módulo 8 — Facturación Acumulativa, Liquidación SOAT &amp; Auditoría Médica</div>
+            <div>Módulo 8: Facturación Acumulativa, Liquidación &amp; Auditoría Legal</div>
             <div class="module-section-subtitle">Ley N° 29414 y D.S. N° 027-2015-SA (SUSALUD) · D.S. N° 024-2002-MTC (SOAT 5 UIT) · Cierre Financiero y Auditoría</div>
           </div>
         </div>
